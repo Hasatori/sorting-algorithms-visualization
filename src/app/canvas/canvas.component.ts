@@ -13,6 +13,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
   requestId;
   interval;
   squares: Square[] = [];
+  private counter: number = 0;
 
   constructor(private ngZone: NgZone) {
   }
@@ -23,7 +24,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => this.tick());
     setInterval(() => {
       this.tick();
-    }, 200);
+    }, 1);
   }
 
   tick() {
@@ -35,7 +36,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
   }
 
   play() {
-    const square = new Square(this.ctx);
+    const square = new Square(this.ctx, this.counter);
+    this.counter++;
     this.squares = this.squares.concat(square);
   }
 
