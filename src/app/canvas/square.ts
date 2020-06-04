@@ -1,3 +1,4 @@
+
 export class Square {
   private color = 'red';
   private x = 0;
@@ -5,7 +6,7 @@ export class Square {
   private z = 30;
 
   constructor(private ctx: CanvasRenderingContext2D) {
-    this.y =  9;
+    this.y = 9;
 
   }
 

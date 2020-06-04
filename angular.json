@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "sorting-algorithms-visualization": {
+    "mdb-angular-free": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/sorting-algorithms-visualization",
+            "outputPath": "dist/mdb-angular-free",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,9 +28,18 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss",
+              "node_modules/@fortawesome/fontawesome-free/scss/solid.scss",
+              "node_modules/@fortawesome/fontawesome-free/scss/regular.scss",
+              "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
+              "node_modules/angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss",
+              "node_modules/angular-bootstrap-md/assets/scss/mdb.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/hammerjs/hammer.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -54,6 +63,11 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
@@ -62,18 +76,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sorting-algorithms-visualization:build"
+            "browserTarget": "mdb-angular-free:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sorting-algorithms-visualization:build:production"
+              "browserTarget": "mdb-angular-free:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sorting-algorithms-visualization:build"
+            "browserTarget": "mdb-angular-free:build"
           }
         },
         "test": {
@@ -110,15 +124,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "sorting-algorithms-visualization:serve"
+            "devServerTarget": "mdb-angular-free:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "sorting-algorithms-visualization:serve:production"
+              "devServerTarget": "mdb-angular-free:serve:production"
             }
           }
         }
       }
-    }},
-  "defaultProject": "sorting-algorithms-visualization"
+    }
+  },
+  "defaultProject": "mdb-angular-free"
 }
