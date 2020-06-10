@@ -3,7 +3,7 @@
     <div class="m-2">
       <canvas class="canvas shadow rounded" #canvas width="{{canvasSize.value}}" height="300"></canvas>
     </div>
-    <div class="m-2">Canvas size<select #canvasSize class="browser-default custom-select"  >
+    <div class="m-2">Canvas size<select #canvasSize class="browser-default custom-select">
       <option selected value="600">600</option>
       <option value="800">800</option>
       <option value="1000">1000</option>
@@ -12,6 +12,11 @@
   <div class="d-flex flex-row">
     <div>
       <button type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">Start</button>
+    </div>
+    <div>
+      <button type="button" mdbBtn color="success" mdbWavesEffect [disabled]="!swapAnimation.done"
+              (click)="swap()">Swap
+      </button>
     </div>
     <div class="align-self-center">
       <div class="btn-group" mdbDropdown>

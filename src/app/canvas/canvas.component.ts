@@ -1,5 +1,7 @@
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Square} from './square';
+import {tick} from '@angular/core/testing';
+import {Swap} from './swap';
 
 @Component({
   selector: 'app-canvas',
@@ -13,7 +15,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
   requestId;
   interval;
   squares: Square[] = [];
-  private counter: number = 0;
+  private counter = 0;
+  moveTop: Square[] = [];
+  moveBottom: Square[] = [];
+  moveLeft: Square[] = [];
+  moveRight: Square[] = [];
+  swapAnimation: Swap = null;
 
   constructor(private ngZone: NgZone) {
   }
@@ -21,24 +28,31 @@ export class CanvasComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.ctx.fillStyle = 'red';
-    this.ngZone.runOutsideAngular(() => this.tick());
+    this.ngZone.runOutsideAngular(() => {
+      this.tick();
+
+    });
     setInterval(() => {
       this.tick();
-    }, 1);
+    }, 40);
   }
 
   tick() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.squares.forEach((square: Square) => {
-      square.moveRight();
-    });
+    if (this.swapAnimation !== null) {
+      this.swapAnimation.animate();
+    }
+    this.squares.forEach(square => square.draw());
     this.requestId = requestAnimationFrame(() => this.tick);
   }
 
   play() {
-    const square = new Square(this.ctx, this.counter);
-    this.counter++;
-    this.squares = this.squares.concat(square);
+    for (let i = 0; i < 15; i++) {
+      const square = new Square(this.ctx, this.counter, i, 8);
+      this.counter++;
+      this.squares = this.squares.concat(square);
+    }
+
   }
 
   ngOnDestroy() {
@@ -46,4 +60,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
     cancelAnimationFrame(this.requestId);
   }
 
+
+  swap() {
+    let first = this.getRandomSquareElement();
+    let seond = this.getRandomSquareElement();
+    this.swapAnimation = new Swap(first, seond);
+  }
+
+  getRandomSquareElement(): Square {
+    return this.squares[Math.floor(Math.random() * Math.floor(this.squares.length))];
+  }
 }
