@@ -3,32 +3,66 @@
     <div class="m-2">
       <canvas class="canvas shadow rounded" #canvas width="{{canvasSize.value}}" height="300"></canvas>
     </div>
-    <div class="m-2">Canvas size<select #canvasSize class="browser-default custom-select">
-      <option selected value="600">600</option>
-      <option value="800">800</option>
-      <option value="1000">1000</option>
-    </select></div>
-    <div class="m-2">Animation speed<select #animationSpeed class="browser-default custom-select" (change)="setAnimationSpeed()">
-      <option selected value="40">40</option>
-      <option value="20">20</option>
-      <option value="10">10</option>
-    </select></div>
+    <div class="d-flex flex-column">
+      <div class="m-1">Canvas size<select #canvasSize class="browser-default custom-select">
+        <option selected value="1000">1000</option>
+        <option value="800">800</option>
+        <option value="600">600</option>
+      </select></div>
+      <div class="m-1">Animation speed<select #animationSpeed class="browser-default custom-select"
+                                              (change)="setAnimationSpeed()">
+        <option selected value="1">1</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="40">40</option>
+      </select></div>
+    </div>
+
   </div>
   <div class="d-flex flex-row">
     <div>
-      <button type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">Start</button>
-    </div>
-    <div>
-      <button type="button" mdbBtn color="success" mdbWavesEffect [disabled]="swapAnimation!=null && !swapAnimation.done"
-              (click)="swap()">Swap
+      <button *ngIf="this.selectionSort==null" type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">
+        Start
       </button>
+      <button *ngIf="this.selectionSort!==null && this.selectionSort.done" type="button" mdbBtn color="success"
+              mdbWavesEffect
+              (click)="play()">Run again
+      </button>
+      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done && this.stopped===false" type="button" mdbBtn color="info"
+              mdbWavesEffect (click)="this.stopped=true">Pause
+      </button>
+      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done && this.stopped===true" type="button" mdbBtn color="info" mdbWavesEffect
+              (click)="this.stopped=false">Continue
+      </button>
+      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done" type="button" mdbBtn color="danger"
+              mdbWavesEffect
+              (click)="stop()">Stop
+      </button>
+
     </div>
-    <div class="align-self-center">
+    <!--    <div>
+          <button type="button" mdbBtn color="success" mdbWavesEffect [disabled]="swapAnimation!=null && !swapAnimation.done"
+                  (click)="swap()">Swap
+          </button>
+        </div>-->
+    <div class="align-self-center d-flex flex-column">
+      <div class="align-self-center">Sorting algorithm</div>
+
       <div class="btn-group" mdbDropdown>
         <select class="browser-default custom-select">
           <option selected>Selection sort</option>
-          <option value="1">Bubble sort</option>
-          <option value="2">Merge sort</option>
+          <!--    <option value="1">Bubble sort</option>
+              <option value="2">Merge sort</option>-->
+        </select>
+      </div>
+    </div>
+    <div class="align-self-center ml-1 d-flex flex-column">
+      <div class="align-self-center"> Number of objects to sort</div>
+      <div class="btn-group" mdbDropdown>
+        <select class="browser-default custom-select" #numberOfObjectsToSort (change)="setCounter()">
+          <option selected value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
         </select>
       </div>
     </div>
