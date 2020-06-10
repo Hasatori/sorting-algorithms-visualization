@@ -11,6 +11,7 @@ import {Swap} from './swap';
 export class CanvasComponent implements OnInit, OnDestroy {
   @Input() canvasSize: number;
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('animationSpeed', {static: true}) animationSpeedComponent: ElementRef<HTMLSelectElement>;
   ctx: CanvasRenderingContext2D;
   requestId;
   interval;
@@ -21,23 +22,24 @@ export class CanvasComponent implements OnInit, OnDestroy {
   moveLeft: Square[] = [];
   moveRight: Square[] = [];
   swapAnimation: Swap = null;
+  animationSpeed: number;
 
   constructor(private ngZone: NgZone) {
+
   }
 
   ngOnInit() {
+    this.setAnimationSpeed();
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.ctx.fillStyle = 'red';
     this.ngZone.runOutsideAngular(() => {
       this.tick();
-
     });
-    setInterval(() => {
-      this.tick();
-    }, 40);
+
   }
 
   tick() {
+    console.log(this.animationSpeed);
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     if (this.swapAnimation !== null) {
       this.swapAnimation.animate();
@@ -69,5 +71,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   getRandomSquareElement(): Square {
     return this.squares[Math.floor(Math.random() * Math.floor(this.squares.length))];
+  }
+
+  setAnimationSpeed() {
+    clearInterval(this.interval);
+    cancelAnimationFrame(this.requestId);
+    this.animationSpeed = Number(this.animationSpeedComponent.nativeElement.value);
+    this.interval = setInterval(() => {
+      this.tick();
+    }, Number(this.animationSpeedComponent.nativeElement.value));
   }
 }

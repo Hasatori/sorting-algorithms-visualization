@@ -8,13 +8,18 @@
       <option value="800">800</option>
       <option value="1000">1000</option>
     </select></div>
+    <div class="m-2">Animation speed<select #animationSpeed class="browser-default custom-select" (change)="setAnimationSpeed()">
+      <option selected value="40">40</option>
+      <option value="20">20</option>
+      <option value="10">10</option>
+    </select></div>
   </div>
   <div class="d-flex flex-row">
     <div>
       <button type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">Start</button>
     </div>
     <div>
-      <button type="button" mdbBtn color="success" mdbWavesEffect [disabled]="!swapAnimation.done"
+      <button type="button" mdbBtn color="success" mdbWavesEffect [disabled]="swapAnimation!=null && !swapAnimation.done"
               (click)="swap()">Swap
       </button>
     </div>
