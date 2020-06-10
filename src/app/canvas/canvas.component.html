@@ -1,11 +1,12 @@
 <div class="flex-column">
   <div class="d-flex flex-row">
+
     <div class="m-2">
       <canvas class="canvas shadow rounded" #canvas width="{{canvasSize.value}}" height="300"></canvas>
     </div>
     <div class="d-flex flex-column">
       <div class="m-1">Canvas size<select #canvasSize class="browser-default custom-select">
-        <option selected value="1000">1000</option>
+        <option selected value="2000">2000</option>
         <option value="800">800</option>
         <option value="600">600</option>
       </select></div>
@@ -21,20 +22,22 @@
   </div>
   <div class="d-flex flex-row">
     <div>
-      <button *ngIf="this.selectionSort==null" type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">
+      <button *ngIf="this.sortingAlgorithm==null" type="button" mdbBtn color="success" mdbWavesEffect (click)="play()">
         Start
       </button>
-      <button *ngIf="this.selectionSort!==null && this.selectionSort.done" type="button" mdbBtn color="success"
+      <button *ngIf="this.sortingAlgorithm!==null && this.sortingAlgorithm.done" type="button" mdbBtn color="success"
               mdbWavesEffect
               (click)="play()">Run again
       </button>
-      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done && this.stopped===false" type="button" mdbBtn color="info"
+      <button *ngIf="this.sortingAlgorithm!==null && !this.sortingAlgorithm.done && this.stopped===false" type="button"
+              mdbBtn color="info"
               mdbWavesEffect (click)="this.stopped=true">Pause
       </button>
-      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done && this.stopped===true" type="button" mdbBtn color="info" mdbWavesEffect
+      <button *ngIf="this.sortingAlgorithm!==null && !this.sortingAlgorithm.done && this.stopped===true" type="button"
+              mdbBtn color="info" mdbWavesEffect
               (click)="this.stopped=false">Continue
       </button>
-      <button *ngIf="this.selectionSort!==null && !this.selectionSort.done" type="button" mdbBtn color="danger"
+      <button *ngIf="this.sortingAlgorithm!==null && !this.sortingAlgorithm.done" type="button" mdbBtn color="danger"
               mdbWavesEffect
               (click)="stop()">Stop
       </button>
@@ -49,10 +52,10 @@
       <div class="align-self-center">Sorting algorithm</div>
 
       <div class="btn-group" mdbDropdown>
-        <select class="browser-default custom-select">
-          <option selected>Selection sort</option>
-          <!--    <option value="1">Bubble sort</option>
-              <option value="2">Merge sort</option>-->
+        <select class="browser-default custom-select" #sortingAlgorithmSelect>
+          <option selected [value]="bubbleSortName()">{{bubbleSortName()}}</option>
+          <option [value]="selectionSortName()">{{selectionSortName()}}</option>
+          <!--  <option value="2">Merge sort</option>-->
         </select>
       </div>
     </div>

@@ -1,22 +1,20 @@
-import {Square} from './square';
-import {Step} from './step';
-import {Swap} from './swap';
+import {Square} from '../square';
+import {Step} from '../step';
+import {Swap} from '../swap';
+import {SortingAlgorithm} from './sorting-algorithm';
 
-export class SelectionSort {
-
-  private readonly squares: Array<Square>;
+export class SelectionSort implements SortingAlgorithm {
   step: Step;
   swapAnimation: Swap;
   searchSection: Array<Square>;
-  done: boolean = false;
+  done = false;
 
   constructor(squares: Array<Square>) {
-    this.squares = squares;
     this.searchSection = Array.from(squares);
     this.step = this.createNextStep();
   }
 
-  nextStep(): Step {
+  animate() {
     if (this.searchSection.length === 0) {
       console.log('done');
       this.done = true;
@@ -24,7 +22,7 @@ export class SelectionSort {
     if (this.step.done) {
       this.step = this.createNextStep();
     }
-    return this.step;
+    this.step.execute();
   }
 
   private findLowestAmong(squares: Array<Square>): Square {

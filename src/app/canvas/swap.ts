@@ -37,12 +37,15 @@ export class Swap {
 
   animate() {
     if (!this.firstOnPlace) {
-      if (this.first.y >= this.topLimit) {
+      if (this.first.y > this.topLimit) {
+
         this.first.move(Direction.TOP, this.movementUnit);
       } else {
         if (!this.checkOneOnPlaceOfAnother(this.first, this.firstHorizontalLimit, this.firstHorizontalDirection)) {
+
           this.first.move(this.firstHorizontalDirection, this.movementUnit);
         } else {
+
           this.firstOnPlace = true;
         }
       }
@@ -55,9 +58,11 @@ export class Swap {
     }
     if (!this.secondOnPlace) {
       if (this.second.y < this.bottomLimit) {
+
         this.second.move(Direction.BOTTOM, this.movementUnit);
       } else {
         if (!this.checkOneOnPlaceOfAnother(this.second, this.secondHorizontalLimit, this.secondHorizontalDirection)) {
+
           this.second.move(this.secondHorizontalDirection, this.movementUnit);
         } else {
           this.secondOnPlace = true;
@@ -65,18 +70,20 @@ export class Swap {
       }
     } else {
       if (!(this.second.y - this.movementUnit < this.initY)) {
+
         this.second.move(Direction.TOP, this.movementUnit);
       } else {
         this.secondDone = true;
       }
     }
     this.done = this.firstDone && this.secondDone;
+
   }
 
   checkOneOnPlaceOfAnother(first: Square, horizontalLimit: number, direction: Direction): boolean {
     switch (direction) {
       case Direction.RIGHT:
-        return first.x + this.movementUnit > horizontalLimit;
+        return first.x - this.movementUnit > horizontalLimit;
       case Direction.LEFT:
         return first.x - this.movementUnit < horizontalLimit;
     }

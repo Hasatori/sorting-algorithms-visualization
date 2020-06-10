@@ -41,10 +41,7 @@ export class Square {
     this.ctx.font = '10px Georgia';
     this.ctx.fillStyle = '#FFFFFF';
     this.ctx.fillText(this.numberValue.toString(), this.z * this.x + this.z / 2, this.z * this.y + this.z / 2);
-    this.ctx.shadowColor = '#aaaaaa';
-    this.ctx.shadowBlur = 5;
-    this.ctx.shadowOffsetX = 5;
-    this.ctx.shadowOffsetY = 2;
-    //   this.ctx.stroke();
+    this.ctx.fillStyle = '#000000';
+    this.ctx.stroke();
   }
 }

@@ -1,8 +1,9 @@
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Square} from './square';
-import {tick} from '@angular/core/testing';
 import {Swap} from './swap';
-import {SelectionSort} from './selection-sort';
+import {SortingAlgorithm} from './sorting-algorithms/sorting-algorithm';
+import {SortingAlgorithmsFactory} from './sorting-algorithms/sorting-algorithms-factory';
+import {BUBBLE_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
 
 @Component({
   selector: 'app-canvas',
@@ -14,19 +15,17 @@ export class CanvasComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('animationSpeed', {static: true}) animationSpeedComponent: ElementRef<HTMLSelectElement>;
   @ViewChild('numberOfObjectsToSort', {static: true}) numberOfObjectsToSort: ElementRef<HTMLSelectElement>;
+  @ViewChild('sortingAlgorithmSelect', {static: true}) sortingAlgorithmsSelect: ElementRef<HTMLSelectElement>;
   ctx: CanvasRenderingContext2D;
   requestId;
   interval;
   squares: Square[] = [];
   private counter = 10;
-  moveTop: Square[] = [];
-  moveBottom: Square[] = [];
-  moveLeft: Square[] = [];
-  moveRight: Square[] = [];
   swapAnimation: Swap = null;
   animationSpeed: number;
-  selectionSort: SelectionSort = null;
+  sortingAlgorithm: SortingAlgorithm = null;
   stopped = false;
+  sortingAlgorithmsFactory = new SortingAlgorithmsFactory();
 
   constructor(private ngZone: NgZone) {
 
@@ -45,9 +44,9 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   tick() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    if (this.selectionSort != null && !this.stopped) {
-      if (!this.selectionSort.done) {
-        this.selectionSort.nextStep().execute();
+    if (this.sortingAlgorithm != null && !this.stopped) {
+      if (!this.sortingAlgorithm.done) {
+        this.sortingAlgorithm.animate();
       }
     }
     this.squares.forEach(square => square.draw());
@@ -62,23 +61,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
       const square = new Square(this.ctx, Math.floor(Math.random() * Math.floor(1000)), i, 2);
       this.squares = this.squares.concat(square);
     }
-    this.selectionSort = new SelectionSort(this.squares);
+
+    this.sortingAlgorithm = this.sortingAlgorithmsFactory.getSortingAlgorithm(this.sortingAlgorithmsSelect.nativeElement.value, this.squares);
+
   }
 
   ngOnDestroy() {
     clearInterval(this.interval);
     cancelAnimationFrame(this.requestId);
-  }
-
-
-  swap() {
-    let first = this.getRandomSquareElement();
-    let seond = this.getRandomSquareElement();
-    this.swapAnimation = new Swap(first, seond);
-  }
-
-  getRandomSquareElement(): Square {
-    return this.squares[Math.floor(Math.random() * Math.floor(this.squares.length))];
   }
 
   setAnimationSpeed() {
@@ -95,8 +85,16 @@ export class CanvasComponent implements OnInit, OnDestroy {
   }
 
   stop() {
-    this.selectionSort = null;
+    this.sortingAlgorithm = null;
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.squares = [];
+  }
+
+  bubbleSortName(): string {
+    return BUBBLE_SORT;
+  }
+
+  selectionSortName(): string {
+    return SELECTION_SORT;
   }
 }
