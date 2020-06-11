@@ -32,6 +32,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
   sortingAlgorithm: SortingAlgorithm = null;
   paused = false;
   sortingAlgorithmsFactory = new SortingAlgorithmsFactory();
+  speed: number;
 
   constructor(private ngZone: NgZone) {
 
@@ -51,11 +52,16 @@ export class CanvasComponent implements OnInit, OnDestroy {
           break;
         case Action.PAUSE:
           this.paused = true;
+          clearInterval(this.interval);
+          cancelAnimationFrame(this.requestId);
           break;
         case Action.STOP:
           this.stop();
           break;
         case Action.CONTINUE:
+          this.interval = setInterval(() => {
+            this.tick();
+          }, this.speed);
           this.paused = false;
           break;
 
@@ -72,11 +78,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
       }
     });
     this.animationSpeed.subscribe(speed => {
+      this.speed = speed;
       clearInterval(this.interval);
       cancelAnimationFrame(this.requestId);
-      this.interval = setInterval(() => {
-        this.tick();
-      }, speed);
+      if (this.sortingAlgorithm !== null && !this.paused) {
+        this.interval = setInterval(() => {
+          this.tick();
+        }, speed);
+      }
     });
   }
 
@@ -87,6 +96,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
         this.sortingAlgorithm.animate();
       } else {
         this.sortingAlgorithm = null;
+        clearInterval(this.interval);
+        cancelAnimationFrame(this.requestId);
       }
 
     }
@@ -105,9 +116,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
     this.sortingAlgorithm = null;
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.squares = [];
+    clearInterval(this.interval);
+    cancelAnimationFrame(this.requestId);
   }
 
   start() {
+    this.interval = setInterval(() => {
+      this.tick();
+    }, this.speed);
     this.sortingAlgorithm = this.sortingAlgorithmsFactory
       .getSortingAlgorithm(this.sortingAlgorithmsSelect.nativeElement.value, this.squares);
   }
