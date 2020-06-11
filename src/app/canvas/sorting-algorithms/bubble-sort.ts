@@ -1,16 +1,15 @@
 import {SortingAlgorithm} from './sorting-algorithm';
 import {Square} from '../square';
 import {Step} from '../step';
-import {Swap} from '../swap';
+import {Swap} from '../animation/swap';
 
 export class BubbleSort implements SortingAlgorithm {
 
   private readonly squares: Array<Square>;
   step: Step;
-  swapAnimation: Swap;
   done = false;
   index = 0;
-  iterationRestared: boolean = false;
+  iterationRestared = false;
 
   constructor(squares: Array<Square>) {
     this.squares = squares;
@@ -23,6 +22,7 @@ export class BubbleSort implements SortingAlgorithm {
       this.step = this.createNextStep();
     }
     this.step.execute();
+
   }
 
   private createNextStep(): Step {
@@ -38,7 +38,7 @@ export class BubbleSort implements SortingAlgorithm {
       if (this.index + 2 >= this.squares.length + 1) {
         if (this.iterationRestared) {
           this.done = true;
-          break;
+          return;
         } else {
           this.index = 0;
           this.iterationRestared = true;

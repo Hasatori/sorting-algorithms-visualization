@@ -3,7 +3,7 @@ import {Direction} from './direction';
 
 export class Square {
   private strokeColor = '#433131';
-  private fontColor='#FCFAE4';
+  private fontColor = '#FCFAE4';
   private backgroundColor = '#75BEEE';
   x;
   y;

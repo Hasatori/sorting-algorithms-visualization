@@ -1,5 +1,5 @@
-import {Square} from './square';
-import {Direction} from './direction';
+import {Square} from '../square';
+import {Direction} from '../direction';
 
 export class Swap {
   private second: Square;

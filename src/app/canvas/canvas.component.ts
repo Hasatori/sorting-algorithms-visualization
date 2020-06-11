@@ -1,9 +1,9 @@
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Square} from './square';
-import {Swap} from './swap';
+import {Swap} from './animation/swap';
 import {SortingAlgorithm} from './sorting-algorithms/sorting-algorithm';
 import {SortingAlgorithmsFactory} from './sorting-algorithms/sorting-algorithms-factory';
-import {BUBBLE_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
+import {BUBBLE_SORT, INSERTION_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
 
 @Component({
   selector: 'app-canvas',
@@ -96,5 +96,9 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   selectionSortName(): string {
     return SELECTION_SORT;
+  }
+
+  insertionSortName(): string {
+    return INSERTION_SORT;
   }
 }

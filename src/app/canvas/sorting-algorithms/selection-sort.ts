@@ -1,11 +1,10 @@
 import {Square} from '../square';
 import {Step} from '../step';
-import {Swap} from '../swap';
+import {Swap} from '../animation/swap';
 import {SortingAlgorithm} from './sorting-algorithm';
 
 export class SelectionSort implements SortingAlgorithm {
   step: Step;
-  swapAnimation: Swap;
   searchSection: Array<Square>;
   done = false;
 
