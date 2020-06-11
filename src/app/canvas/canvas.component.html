@@ -6,15 +6,15 @@
     </div>
     <div class="d-flex flex-column">
       <div class="m-1">Canvas size<select #canvasSize class="browser-default custom-select">
-        <option selected value="2000">2000</option>
-        <option value="800">800</option>
+        <option selected value="1000">1000</option>
+        <option  value="800">800</option>
         <option value="600">600</option>
       </select></div>
       <div class="m-1">Animation speed<select #animationSpeed class="browser-default custom-select"
                                               (change)="setAnimationSpeed()">
-        <option selected value="1">1</option>
+        <option  value="1">1</option>
         <option value="10">10</option>
-        <option value="20">20</option>
+        <option selected value="20">20</option>
         <option value="40">40</option>
       </select></div>
     </div>
@@ -52,7 +52,7 @@
       <div class="align-self-center">Sorting algorithm</div>
 
       <div class="btn-group" mdbDropdown>
-        <select class="browser-default custom-select" #sortingAlgorithmSelect>
+        <select  [disabled]="this.sortingAlgorithm!==null && !this.sortingAlgorithm.done" class="browser-default custom-select" #sortingAlgorithmSelect>
           <option selected [value]="bubbleSortName()">{{bubbleSortName()}}</option>
           <option [value]="selectionSortName()">{{selectionSortName()}}</option>
           <!--  <option value="2">Merge sort</option>-->
@@ -62,9 +62,9 @@
     <div class="align-self-center ml-1 d-flex flex-column">
       <div class="align-self-center"> Number of objects to sort</div>
       <div class="btn-group" mdbDropdown>
-        <select class="browser-default custom-select" #numberOfObjectsToSort (change)="setCounter()">
-          <option selected value="10">10</option>
-          <option value="20">20</option>
+        <select [disabled]="this.sortingAlgorithm!==null && !this.sortingAlgorithm.done" class="browser-default custom-select" #numberOfObjectsToSort (change)="setCounter()">
+          <option value="10">10</option>
+          <option selected value="20">20</option>
           <option value="30">30</option>
         </select>
       </div>

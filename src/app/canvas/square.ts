@@ -2,7 +2,9 @@ import {NgZone} from '@angular/core';
 import {Direction} from './direction';
 
 export class Square {
-  private color = 'black';
+  private strokeColor = '#433131';
+  private fontColor='#FCFAE4';
+  private backgroundColor = '#75BEEE';
   x;
   y;
   private z = 50;
@@ -34,14 +36,16 @@ export class Square {
 
 
   public draw() {
-    this.ctx.fillStyle = this.color;
     this.ctx.beginPath();
-    this.ctx.fillStyle = '#FF0000';
+    this.ctx.fillStyle = this.backgroundColor;
     this.ctx.fillRect(this.z * this.x, this.z * this.y, this.z, this.z);
-    this.ctx.font = '10px Georgia';
-    this.ctx.fillStyle = '#FFFFFF';
+    this.ctx.font = 'bold 10px Georgia';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillStyle = this.fontColor;
     this.ctx.fillText(this.numberValue.toString(), this.z * this.x + this.z / 2, this.z * this.y + this.z / 2);
-    this.ctx.fillStyle = '#000000';
-    this.ctx.stroke();
+    this.ctx.strokeStyle = this.strokeColor;
+    this.ctx.lineWidth = 1;
+    this.ctx.strokeRect(this.z * this.x, this.z * this.y, this.z, this.z);
   }
 }

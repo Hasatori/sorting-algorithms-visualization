@@ -42,10 +42,9 @@ export class Swap {
         this.first.move(Direction.TOP, this.movementUnit);
       } else {
         if (!this.checkOneOnPlaceOfAnother(this.first, this.firstHorizontalLimit, this.firstHorizontalDirection)) {
-
           this.first.move(this.firstHorizontalDirection, this.movementUnit);
         } else {
-
+          this.first.x = this.firstHorizontalLimit;
           this.firstOnPlace = true;
         }
       }
@@ -62,15 +61,14 @@ export class Swap {
         this.second.move(Direction.BOTTOM, this.movementUnit);
       } else {
         if (!this.checkOneOnPlaceOfAnother(this.second, this.secondHorizontalLimit, this.secondHorizontalDirection)) {
-
           this.second.move(this.secondHorizontalDirection, this.movementUnit);
         } else {
+          this.second.x = this.secondHorizontalLimit;
           this.secondOnPlace = true;
         }
       }
     } else {
       if (!(this.second.y - this.movementUnit < this.initY)) {
-
         this.second.move(Direction.TOP, this.movementUnit);
       } else {
         this.secondDone = true;
@@ -83,13 +81,22 @@ export class Swap {
   checkOneOnPlaceOfAnother(first: Square, horizontalLimit: number, direction: Direction): boolean {
     switch (direction) {
       case Direction.RIGHT:
-        return first.x - this.movementUnit > horizontalLimit;
+        return first.x + this.movementUnit >= horizontalLimit;
       case Direction.LEFT:
-        return first.x - this.movementUnit < horizontalLimit;
+        return first.x - this.movementUnit <= horizontalLimit;
     }
 
   }
 
+  getOppositeDirection(direction: Direction) {
+    switch (direction) {
+      case Direction.LEFT:
+        return Direction.RIGHT;
+      case Direction.RIGHT:
+        return Direction.LEFT;
+
+    }
+  }
 }
 
 
