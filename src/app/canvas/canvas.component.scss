@@ -1,3 +1,17 @@
-.canvas{
-  border:1px solid black;
+@import "../app.component";
+
+.canvas {
+  border: 1px solid black;
+}
+
+.delete-canvas {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: $boostrapWhie;
+  background-color: $boostrabDanger;
+}
+
+.delete-canvas:hover {
+  cursor: pointer;
 }

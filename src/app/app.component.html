@@ -1,6 +1,87 @@
 <div class="container-fluid m-auto pt-5">
   <div class="d-flex flex-column">
-    <div><h1>Sorting algorithms visualization</h1></div>
-    <app-canvas></app-canvas>
+    <div><h1>Sorting algorithms visualization</h1>
+    </div>
+    <div>
+      <button type="button" mdbBtn color="success" mdbWavesEffect (click)="startSorting()" *ngIf="!sortingStarted"
+              [disabled]="numbers.length===0">
+        Start
+      </button>
+      <button
+        *ngIf="sortingStarted && !sortingPaused"
+        type="button"
+        mdbBtn color="info"
+        mdbWavesEffect
+        (click)="pauseSorting()"
+      >Pause
+
+      </button>
+      <button
+        *ngIf="sortingPaused"
+        type="button"
+        mdbBtn color="info" mdbWavesEffect
+        (click)="continueSorting()"
+      >Continue
+      </button>
+      <button
+        *ngIf="sortingStarted"
+        type="button" mdbBtn color="danger"
+        mdbWavesEffect
+        (click)="stopSorting()"
+      >Stop
+      </button>
+    </div>
+    <div>
+      <button type="button" mdbBtn color="success" mdbWavesEffect (click)="addCanvas()" [disabled]="sortingStarted">
+        <mdb-icon fas icon="plus"></mdb-icon>
+        Add canvas
+      </button>
+    </div>
+    <div class="d-flex flex-row ">
+      <div class="align-self-center">
+        <button type="button"
+                mdbBtn color="info"
+                mdbWavesEffect (click)="generateData(numberOfObjectsToSort.value)" [disabled]="sortingStarted">Generate
+          data
+        </button>
+      </div>
+      <div class="align-self-center ml-1 d-flex flex-column">
+        <div class="btn-group" mdbDropdown>
+          <select
+            class="browser-default custom-select" #numberOfObjectsToSort>
+            <option value="10">10</option>
+            <option selected value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+      <div class="m-1">Canvas size<select #canvasSizeSelect (change)="setCanvasSize()"
+                                          class="browser-default custom-select">
+        <option value="4000">3000</option>
+        <option value="2000">2000</option>
+        <option selected value="1000">1000</option>
+        <option value="800">800</option>
+        <option value="600">600</option>
+      </select></div>
+      <div class="m-1">Animation speed<select #animationSpeedSelect (change)="setAnimationSpeed()"
+                                              class="browser-default custom-select">
+        <option value="1">1</option>
+        <option value="10">10</option>
+        <option selected value="20">20</option>
+        <option value="40">40</option>
+      </select></div>
+    </div>
+
+    <div *ngFor="let canvas of canvases">
+      <app-canvas
+        [numbers]="data"
+        [action]="action"
+        [canvasSize]="this.canvasSize"
+        [animationSpeed]="this.animationSpeed"
+        (delete)="deleteCanvas(canvas)"
+      ></app-canvas>
+    </div>
   </div>
 </div>
