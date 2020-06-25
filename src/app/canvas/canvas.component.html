@@ -8,7 +8,7 @@
         <mdb-icon fas icon="trash-alt"></mdb-icon>
 
       </div>
-      <canvas class="canvas shadow rounded" #canvas width="{{this.canvasSize}}" height="160"></canvas>
+      <canvas class="canvas shadow rounded" #canvas width="{{this.canvasSize}}" height="1500"></canvas>
     </div>
 
     <div class=" d-flex flex-column">
@@ -20,6 +20,7 @@
           <option selected [value]="bubbleSortName()">{{bubbleSortName()}}</option>
           <option [value]="selectionSortName()">{{selectionSortName()}}</option>
           <option [value]="insertionSortName()">{{insertionSortName()}}</option>
+          <option [value]="mergeSortName()">{{mergeSortName()}}</option>
         </select>
       </div>
 

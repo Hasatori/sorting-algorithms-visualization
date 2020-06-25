@@ -3,7 +3,7 @@ import {Square} from './square';
 import {Swap} from './animation/swap';
 import {SortingAlgorithm} from './sorting-algorithms/sorting-algorithm';
 import {SortingAlgorithmsFactory} from './sorting-algorithms/sorting-algorithms-factory';
-import {BUBBLE_SORT, INSERTION_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
+import {BUBBLE_SORT, INSERTION_SORT, MERGE_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
 import {Observable} from 'rxjs';
 import {Action} from '../action';
 
@@ -73,7 +73,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
       this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
       this.squares = [];
       for (let i = 0; i < numbers.length; i++) {
-        const square = new Square(this.ctx, numbers[i], i, 1.15);
+        const square = new Square(this.ctx, numbers[i], i + 10, 6);
         this.squares = this.squares.concat(square);
       }
     });
@@ -139,4 +139,9 @@ export class CanvasComponent implements OnInit, OnDestroy {
   insertionSortName(): string {
     return INSERTION_SORT;
   }
+
+  mergeSortName(): string {
+    return MERGE_SORT;
+  }
+
 }
