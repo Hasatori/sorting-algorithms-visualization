@@ -2,6 +2,9 @@ import {SortingAlgorithm} from './sorting-algorithm';
 import {Square} from '../square';
 import {Step} from '../step';
 import {Swap} from '../animation/swap';
+import {Observable} from 'rxjs';
+import {LogStep} from './log-step';
+import {Action} from '../../action';
 
 export class BubbleSort implements SortingAlgorithm {
 
@@ -10,14 +13,16 @@ export class BubbleSort implements SortingAlgorithm {
   done = false;
   index = 0;
   iterationRestared = false;
+  steps: LogStep[] = [];
 
   constructor(squares: Array<Square>) {
+    this.steps.push(LogStep.create('Inialazing', 'Input [' + squares.map(square => square.numberValue).join(',') + ']'));
     this.squares = squares;
     this.step = this.createNextStep();
+
   }
 
   animate() {
-
     if (this.step.done) {
       this.step = this.createNextStep();
     }
@@ -38,6 +43,7 @@ export class BubbleSort implements SortingAlgorithm {
       if (this.index + 2 >= this.squares.length + 1) {
         if (this.iterationRestared) {
           this.done = true;
+          this.steps.push(LogStep.create('Done', 'result: [' + this.squares.map(square => square.numberValue).join(',') + ']'));
           return;
         } else {
           this.index = 0;
@@ -51,10 +57,12 @@ export class BubbleSort implements SortingAlgorithm {
     this.squares[this.index] = toSwap;
     this.squares[this.index + 1] = first;
     this.index++;
+    this.steps.push(LogStep.create('Swapping elements', 'Swapping ' + first.numberValue + ' with ' + toSwap.numberValue));
     this.step = {
       done: false,
       execute() {
         if (this.swapAnimation == null) {
+
           this.swapAnimation = new Swap(first, toSwap);
         }
         if (!this.swapAnimation.done) {
@@ -66,4 +74,6 @@ export class BubbleSort implements SortingAlgorithm {
     };
     return this.step;
   }
+
+
 }

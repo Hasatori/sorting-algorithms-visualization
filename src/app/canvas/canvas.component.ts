@@ -20,11 +20,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
   @Input() animationSpeed: Observable<number>;
   @Output() delete: EventEmitter<any> = new EventEmitter();
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
-
+  @ViewChild('logBody', {static: true}) logBody: ElementRef<HTMLDivElement>;
   @ViewChild('sortingAlgorithmSelect', {static: true}) sortingAlgorithmsSelect: ElementRef<HTMLSelectElement>;
   ctx: CanvasRenderingContext2D;
   requestId;
   interval;
+  executionInterval;
   private counter = 10;
   squares: Array<Square> = [];
   swapAnimation: Swap = null;
@@ -33,6 +34,9 @@ export class CanvasComponent implements OnInit, OnDestroy {
   paused = false;
   sortingAlgorithmsFactory = new SortingAlgorithmsFactory();
   speed: number;
+  executionCounter: number = 0;
+  exectiontTime: string = 0 + ' seconds';
+
 
   constructor(private ngZone: NgZone) {
 
@@ -54,6 +58,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
           this.paused = true;
           clearInterval(this.interval);
           cancelAnimationFrame(this.requestId);
+          clearInterval(this.executionInterval);
           break;
         case Action.STOP:
           this.stop();
@@ -62,6 +67,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
           this.interval = setInterval(() => {
             this.tick();
           }, this.speed);
+          this.executionInterval = setInterval(() => {
+            this.executionCounter = this.executionCounter + 1;
+            this.exectiontTime = this.executionCounter + ' seconds';
+          }, 1000);
           this.paused = false;
           break;
 
@@ -95,7 +104,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
       if (!this.sortingAlgorithm.done) {
         this.sortingAlgorithm.animate();
       } else {
-        this.sortingAlgorithm = null;
+        clearInterval(this.executionInterval);
         clearInterval(this.interval);
         cancelAnimationFrame(this.requestId);
       }
@@ -117,15 +126,23 @@ export class CanvasComponent implements OnInit, OnDestroy {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.squares = [];
     clearInterval(this.interval);
+    clearInterval(this.executionInterval);
     cancelAnimationFrame(this.requestId);
+    this.executionCounter = 0;
   }
 
   start() {
+    this.executionCounter = 0;
     this.interval = setInterval(() => {
       this.tick();
     }, this.speed);
     this.sortingAlgorithm = this.sortingAlgorithmsFactory
       .getSortingAlgorithm(this.sortingAlgorithmsSelect.nativeElement.value, this.squares);
+    this.executionInterval = setInterval(() => {
+      this.executionCounter = this.executionCounter + 1;
+      this.exectiontTime = this.executionCounter + ' seconds';
+      this.logBody.nativeElement.scrollTop = this.logBody.nativeElement.scrollHeight;
+    }, 1000);
   }
 
   bubbleSortName(): string {

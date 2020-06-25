@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import { CanvasComponent } from './canvas/canvas.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { CanvasComponent } from './canvas/canvas.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ScrollingModule,
     MDBBootstrapModule.forRoot()
   ],
   providers: [],

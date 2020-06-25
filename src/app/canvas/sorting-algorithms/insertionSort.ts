@@ -3,14 +3,18 @@ import {Square} from '../square';
 import {Step} from '../step';
 import {MoveToPosition} from '../animation/move-to-position';
 import {Swap} from '../animation/swap';
+import {Observable} from 'rxjs';
+import {LogStep} from './log-step';
 
 export class InsertionSort implements SortingAlgorithm {
   done: boolean;
   private step: Step;
   private index = 1;
   private squares: Array<Square>;
+  steps: LogStep[] = [];
 
   constructor(squares: Array<Square>) {
+    this.steps.push(LogStep.create('Inialazing', 'Input [' + squares.map(square => square.numberValue).join(',') + ']'));
     this.squares = squares;
     this.step = this.createNextStep();
   }
@@ -24,6 +28,7 @@ export class InsertionSort implements SortingAlgorithm {
 
   createNextStep(): Step {
     if (this.index === this.squares.length) {
+      this.steps.push(this.getDoneStep());
       this.done = true;
     }
     let candidate = this.squares[this.index];
@@ -53,7 +58,9 @@ export class InsertionSort implements SortingAlgorithm {
       }
     }
     if (compared === null) {
+      this.steps.push(this.getDoneStep());
       this.done = true;
+
     } else {
       let newArray: Array<Square>;
       const comparedIndex = this.squares.indexOf(compared);
@@ -70,6 +77,8 @@ export class InsertionSort implements SortingAlgorithm {
         }
       );
       this.squares = newArray;
+      const prettyIndex = this.squares.indexOf(candidate) + 1;
+      this.steps.push(LogStep.create('Moving element', 'Element ' + candidate.numberValue + ' is being moved to position ' + prettyIndex));
       return this.step = {
         done: false,
         execute() {
@@ -86,6 +95,13 @@ export class InsertionSort implements SortingAlgorithm {
       };
     }
 
-
   }
+
+  private getDoneStep(): LogStep {
+    const doneStep = new LogStep();
+    doneStep.name = 'Done';
+    doneStep.description = 'result: [' + this.squares.map(square => square.numberValue).join(',') + ']';
+    return doneStep;
+  }
+
 }

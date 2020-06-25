@@ -8,9 +8,21 @@
         <mdb-icon fas icon="trash-alt"></mdb-icon>
 
       </div>
-      <canvas class="canvas shadow rounded" #canvas width="{{this.canvasSize}}" height="160"></canvas>
+      <canvas class="canvas shadow rounded" #canvas width="{{this.canvasSize}}" height="300"></canvas>
+      <div class="execution-time h5" *ngIf="this.sortingAlgorithm != null">Execution time: {{exectiontTime}}</div>
     </div>
 
+    <div  class="log d-flex flex-column ml-3 mr-3 border rounded shadow">
+      <div class="log-header py-2 pl-3 border">Output log
+      </div>
+
+    <div class="log-body p-3" #logBody>
+      <ul *ngIf="this.sortingAlgorithm!==null" class="list-unstyled">
+        <li class="step" *ngFor="let step of this.sortingAlgorithm.steps">
+          <span class="step-name">{{step.name}}</span><span class="step-description"> -> {{step.description}}</span></li>
+      </ul>
+    </div>
+    </div>
     <div class=" d-flex flex-column">
       <div>Sorting algorithm</div>
 
