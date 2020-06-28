@@ -3,6 +3,8 @@ import {animate} from '@angular/animations';
 import {Square} from './canvas/square';
 import {Observable, of, Subscriber} from 'rxjs';
 import {Action} from './action';
+import {isUndefined} from 'util';
+import {nullSafeIsEquivalent} from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -15,7 +17,7 @@ export class AppComponent implements OnInit {
   @ViewChild('canvasSizeSelect', {static: true}) canvasSizeSelect: ElementRef<HTMLSelectElement>;
   @ViewChild('animationSpeedSelect', {static: true}) animationSpeedComponent: ElementRef<HTMLSelectElement>;
 
-  canvases = [0];
+  canvases: Array<Canvas> = [];
   data: Observable<Array<number>>;
   dataSubscribers = [];
   actionSubscribers = [];
@@ -27,13 +29,15 @@ export class AppComponent implements OnInit {
 
   sortingStarted = false;
   sortingPaused = false;
+  doneCanvases: Array<Canvas> = [];
 
   constructor() {
     this.data = new Observable((subscriber => {
       this.dataSubscribers.push(subscriber);
-      this.dataSubscribers.forEach(subscriber2 => {
-        subscriber2.next(this.numbers);
-      });
+      setTimeout(() => {
+        subscriber.next(this.numbers);
+      }, 1);
+
     }));
     this.action = new Observable((subscriber => {
       this.actionSubscribers.push(subscriber);
@@ -46,11 +50,16 @@ export class AppComponent implements OnInit {
   }
 
   addCanvas() {
-    this.canvases.push(this.canvases.length);
-    console.log(this.canvases);
+    this.canvases.push(new Canvas());
   }
 
   startSorting() {
+    this.canvases.forEach(canvas => {
+      canvas.place = -1;
+      canvas.executionTime = -1;
+      canvas.done = false;
+    });
+    this.doneCanvases = [];
     this.sortingStarted = true;
     this.actionSubscribers.forEach(subscriber => {
       subscriber.next(Action.START);
@@ -68,6 +77,7 @@ export class AppComponent implements OnInit {
     this.sortingStarted = false;
     this.sortingPaused = false;
     this.numbers = [];
+    this.doneCanvases = [];
     this.actionSubscribers.forEach(subscriber => {
       subscriber.next(Action.STOP);
     });
@@ -100,17 +110,39 @@ export class AppComponent implements OnInit {
   }
 
   setAnimationSpeed() {
-
     this.animationSpeedSubscribers.forEach(subscriber => {
       subscriber.next(Number(this.animationSpeedComponent.nativeElement.value));
     });
   }
 
-  deleteCanvas(value: number) {
-    console.log(this.canvases);
-    this.canvases = this.canvases.filter(canvas => canvas !== value);
-    for (let i = 0; i < this.canvases.length; i++) {
-      this.canvases[i] = i;
+  deleteCanvas(canvas: Canvas) {
+    this.canvases = this.canvases.filter(candidate => candidate !== canvas);
+  }
+
+  done(canvas: Canvas, executionTime: number) {
+    canvas.done = true;
+    canvas.executionTime = executionTime;
+    const lastDoneCanvas = this.doneCanvases[this.doneCanvases.length - 1];
+    console.log(lastDoneCanvas);
+    console.log(canvas);
+    if (isUndefined(lastDoneCanvas)) {
+      canvas.place = 1;
+    } else if (canvas.executionTime === lastDoneCanvas.executionTime) {
+      canvas.place = lastDoneCanvas.place;
+    } else {
+      canvas.place = lastDoneCanvas.place + 1;
+    }
+    this.doneCanvases.push(canvas);
+    if (this.doneCanvases.length === this.canvases.length) {
+      this.sortingStarted = false;
+      this.sortingPaused = false;
+      this.numbers = [];
     }
   }
+}
+
+export class Canvas {
+  done = false;
+  executionTime = -1;
+  place = -1;
 }

@@ -19,38 +19,46 @@
 .execution-time {
   position: absolute;
   right: 1%;
-  bottom: 5%;
+  bottom: 17%;
   color: #4285F4;
 
 }
-.log{
+
+.log {
   width: 500px;
 }
-.log-body{
+
+.log-body {
 
   height: 300px;
   overflow-x: scroll;
   overflow-y: scroll;
   background: #FAFAFA;
-  scrollbar-color:  #171717 #F2F2F2;
+  scrollbar-color: #171717 #FAFAFA;
   scrollbar-width: thin !important;
   font-family: Consolas;
 }
 
-.step-description{
+.step-description {
   color: #171717;
 }
-.step-name{
- color:  #1F1BFD;
+
+.step-name {
+  color: #1F1BFD;
 }
-.step{
+
+.step {
   white-space: nowrap;
 }
-.log-header{
+
+.log-header {
   height: 40px;
   background-color: #F2F2F2;
 }
-.desc{
+
+.desc {
   text-align: left;
- max-width: 10vw;
+  max-width: 10vw;
 }
+
+

@@ -19,12 +19,13 @@ import {Action} from '../action';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.scss']
 })
-export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CanvasComponent implements OnInit, OnDestroy {
   @Input() numbers: Observable<Array<number>>;
   @Input() action: Observable<Action>;
   @Input() canvasSize: number;
   @Input() animationSpeed: Observable<number>;
   @Output() delete: EventEmitter<any> = new EventEmitter();
+  @Output() done: EventEmitter<number> = new EventEmitter();
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('logBody', {static: true}) logBody: ElementRef<HTMLDivElement>;
   @ViewChild('sortingAlgorithmSelect', {static: true}) sortingAlgorithmsSelect: ElementRef<HTMLSelectElement>;
@@ -42,7 +43,9 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   speed: number;
   executionCounter: number = 0;
   exectiontTime: string = 0 + ' seconds';
-  algorithmDescription: string;
+  algorithmDescription: string = BUBBLE_SORT_DESC;
+  autoScrollToBottom = true;
+  private scrollInterval;
 
   constructor(private ngZone: NgZone) {
 
@@ -62,9 +65,7 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
           break;
         case Action.PAUSE:
           this.paused = true;
-          clearInterval(this.interval);
-          cancelAnimationFrame(this.requestId);
-          clearInterval(this.executionInterval);
+          this.clearIntervalsAndCancelAnimation();
           break;
         case Action.STOP:
           this.stop();
@@ -73,10 +74,8 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
           this.interval = setInterval(() => {
             this.tick();
           }, this.speed);
-          this.executionInterval = setInterval(() => {
-            this.executionCounter = this.executionCounter + 1;
-            this.exectiontTime = this.executionCounter + ' seconds';
-          }, 1000);
+          this.setExecutionInterval();
+          this.setScrollInterval();
           this.paused = false;
           break;
 
@@ -93,7 +92,7 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     this.animationSpeed.subscribe(speed => {
-      this.speed = speed;
+      this.speed = speed / 10;
       clearInterval(this.interval);
       cancelAnimationFrame(this.requestId);
       if (this.sortingAlgorithm !== null && !this.paused) {
@@ -102,7 +101,7 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
         }, speed);
       }
     });
-
+    this.algorithmSelected();
   }
 
   tick() {
@@ -111,9 +110,8 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.sortingAlgorithm.done) {
         this.sortingAlgorithm.animate();
       } else {
-        clearInterval(this.executionInterval);
-        clearInterval(this.interval);
-        cancelAnimationFrame(this.requestId);
+        this.clearIntervalsAndCancelAnimation();
+        this.done.emit(this.executionCounter);
       }
 
     }
@@ -132,24 +130,20 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sortingAlgorithm = null;
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.squares = [];
-    clearInterval(this.interval);
-    clearInterval(this.executionInterval);
-    cancelAnimationFrame(this.requestId);
+    this.clearIntervalsAndCancelAnimation();
     this.executionCounter = 0;
   }
 
   start() {
     this.executionCounter = 0;
+    this.exectiontTime = 0 + ' seconds';
     this.interval = setInterval(() => {
       this.tick();
     }, this.speed);
     this.sortingAlgorithm = this.sortingAlgorithmsFactory
       .getSortingAlgorithm(this.sortingAlgorithmsSelect.nativeElement.value, this.squares);
-    this.executionInterval = setInterval(() => {
-      this.executionCounter = this.executionCounter + 1;
-      this.exectiontTime = this.executionCounter + ' seconds';
-      this.logBody.nativeElement.scrollTop = this.logBody.nativeElement.scrollHeight;
-    }, 1000);
+    this.setExecutionInterval();
+    this.setScrollInterval();
   }
 
 
@@ -179,8 +173,30 @@ export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.algorithmSelected();
+  setExecutionInterval() {
+    this.executionInterval = setInterval(() => {
+      this.executionCounter = this.executionCounter + 1;
+      this.exectiontTime = this.executionCounter + ' seconds';
+      if (this.autoScrollToBottom) {
+        this.logBody.nativeElement.scrollTop = this.logBody.nativeElement.scrollHeight;
+      }
+    }, 1000);
+  }
+
+  setScrollInterval() {
+
+    this.scrollInterval = setInterval(() => {
+      if (this.autoScrollToBottom) {
+        this.logBody.nativeElement.scrollTop = this.logBody.nativeElement.scrollHeight;
+      }
+    }, 300);
+  }
+
+  clearIntervalsAndCancelAnimation() {
+    clearInterval(this.interval);
+    clearInterval(this.executionInterval);
+    clearInterval(this.scrollInterval);
+    cancelAnimationFrame(this.requestId);
   }
 }
 
