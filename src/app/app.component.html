@@ -42,17 +42,17 @@
         <button type="button"
                 mdbBtn color="info"
                 mdbWavesEffect (click)="generateData(numberOfObjectsToSort.value)"
-                [disabled]="sortingStarted || !this.canvases.length>0"
+                [disabled]="sortingStarted || this.canvases.length===0"
         >Generate
           data
         </button>
       </div>
       <div class="align-self-end ml-1 d-flex flex-column">
         <div class="btn-group" mdbDropdown>
-          <select [disabled]="sortingStarted || !this.canvases.length>0"
+          <select [disabled]="sortingStarted || this.canvases.length===0"
                   class="browser-default custom-select" #numberOfObjectsToSort>
             <option selected value="10">10</option>
-            <option  value="20">20</option>
+            <option value="20">20</option>
             <option value="30">30</option>
             <option value="40">40</option>
             <option value="50">50</option>
@@ -63,7 +63,7 @@
         </div>
       </div>
       <div class="m-1">Canvas size<select #canvasSizeSelect (change)="setCanvasSize()"
-                                          [disabled]="sortingStarted || !this.canvases.length>0"
+                                          [disabled]="sortingStarted || this.canvases.length===0"
                                           class="browser-default custom-select">
         <option value="4000">3000</option>
         <option value="2000">2000</option>
@@ -72,7 +72,7 @@
         <option value="600">600</option>
       </select></div>
       <div class="m-1">Animation speed<select #animationSpeedSelect (change)="setAnimationSpeed()"
-                                              [disabled]="sortingStarted || !this.canvases.length>0"
+                                              [disabled]="sortingStarted || this.canvases.length===0"
                                               class="browser-default custom-select">
         <option value="1">1</option>
         <option value="10">10</option>
@@ -82,7 +82,8 @@
     </div>
 
     <div *ngFor="let canvas of canvases" class="mt-5">
-      <div class="sorting-done ml-3 mt-1" *ngIf="canvas.done">Finished #{{canvas.place}} after {{canvas.executionTime}} seconds
+      <div class="sorting-done ml-3 mt-1" *ngIf="canvas.done">Finished #{{canvas.place}} after {{canvas.executionTime}}
+        seconds
         <mdb-icon class="text-success font-weight-bold" far icon="check-circle"></mdb-icon>
       </div>
       <app-canvas
