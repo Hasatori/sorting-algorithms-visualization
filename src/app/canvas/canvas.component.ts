@@ -1,9 +1,15 @@
-import {Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Square} from './square';
 import {Swap} from './animation/swap';
 import {SortingAlgorithm} from './sorting-algorithms/sorting-algorithm';
 import {SortingAlgorithmsFactory} from './sorting-algorithms/sorting-algorithms-factory';
-import {BUBBLE_SORT, INSERTION_SORT, SELECTION_SORT} from './sorting-algorithms/sorting-algorithm-names';
+import {
+  BUBBLE_SORT,
+  BUBBLE_SORT_DESC,
+  INSERTION_SORT, INSERTION_SORT_DESC,
+  SELECTION_SORT,
+  SELECTION_SORT_DESC
+} from './sorting-algorithms/sorting-algorithm-names';
 import {Observable} from 'rxjs';
 import {Action} from '../action';
 
@@ -13,7 +19,7 @@ import {Action} from '../action';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.scss']
 })
-export class CanvasComponent implements OnInit, OnDestroy {
+export class CanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() numbers: Observable<Array<number>>;
   @Input() action: Observable<Action>;
   @Input() canvasSize: number;
@@ -36,7 +42,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
   speed: number;
   executionCounter: number = 0;
   exectiontTime: string = 0 + ' seconds';
-
+  algorithmDescription: string;
 
   constructor(private ngZone: NgZone) {
 
@@ -96,6 +102,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
         }, speed);
       }
     });
+
   }
 
   tick() {
@@ -145,6 +152,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+
   bubbleSortName(): string {
     return BUBBLE_SORT;
   }
@@ -156,4 +164,23 @@ export class CanvasComponent implements OnInit, OnDestroy {
   insertionSortName(): string {
     return INSERTION_SORT;
   }
+
+  algorithmSelected() {
+    switch (this.sortingAlgorithmsSelect.nativeElement.value) {
+      case BUBBLE_SORT:
+        this.algorithmDescription = BUBBLE_SORT_DESC;
+        break;
+      case SELECTION_SORT:
+        this.algorithmDescription = SELECTION_SORT_DESC;
+        break;
+      case INSERTION_SORT:
+        this.algorithmDescription = INSERTION_SORT_DESC;
+        break;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.algorithmSelected();
+  }
 }
+
